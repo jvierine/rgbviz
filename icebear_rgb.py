@@ -95,7 +95,7 @@ A3=n.moveaxis(A3,[0,1],[1,0])
 #A3=10.0*n.log10(A3+1)
 plt.figure(figsize=(16,9))
 rb.rgb_image(A3[:,:,:],peak_fraction=1,ax1=[min_range,max_range],ax1label="Range (km)",ax0=[n.min(tv),n.max(tv)],ax0label="Unix time (s)",
-             cax=[min_dop,max_dop],cblabel="Doppler (?)")
+             cax=[min_dop,max_dop],cblabel="Doppler shift (Hz)")
 
 plt.tight_layout()
 plt.show()
