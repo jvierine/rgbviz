@@ -17,9 +17,9 @@ def lognormalize(I):
 
 def rgb_image(A3,
               ax0=[0,1],
-              ax0label="",
+              ax0label="par 1",
               ax1=[0,1],
-              ax1label="",              
+              ax1label="par 2",              
               cax=[0,1],
               peak_fraction=1,  # 1 = all 0 = only maximum
               cblabel="par 3",
@@ -114,7 +114,7 @@ if __name__ == "__main__":
 #    plt.imshow(I[:,:,0])
  #   plt.show()
 #    exit(0)
-    rgb_image(I)
+    rgb_image(I,peak_fraction=1.0)
     plt.show()
 #    h=h5py.File("data/rgb.h5","r")
  #   I=h["I"][()]
