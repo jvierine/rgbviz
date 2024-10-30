@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 def lognormalize(I):
+
     v=(1/3)*(I[:,:,0]+I[:,:,1]+I[:,:,2])
     I2=n.log10(I)
     idx=n.where(I>0)
@@ -25,7 +26,17 @@ def rgb_image(A3,
               gain=1.0,
               maxv=None,
               autogain=True,
+              plot=True
             ):
+    """
+    return float32 rgb image with values between 0..1 on each of the rgb channels 
+    representing the spectrum of values on the third dimension at each pixel of the image
+    the idea is that each value of the thrid dimension is a color on the rainbow
+    light of each color is mixed together corresponding to the value of the function in the 
+    third dimension. It doesn't preserve any sort of linear perception of the distribution, but
+    it allows you to quickly see what is where.
+    logarithmic intensities supported only currently.
+    """
     # x,y 0,1
     # color 2
 #    MFm=n.max(MF,axis=marginalize)
@@ -70,14 +81,16 @@ def rgb_image(A3,
  #       I=gain*I
    # I[I>1]=1
     I=lognormalize(I)
-    plt.imshow(I[::-1,:],aspect="auto",extent=[ax0[0],ax0[1],ax1[0],ax1[1]])
-    plt.xlabel(ax0label)
-    plt.ylabel(ax1label)    
-    plt.scatter([-1,-1],[-1,-1],c=[cax[0],cax[1]],cmap=cmap)
-    cb=plt.colorbar()
-    cb.set_label(cblabel)
-    plt.xlim(ax0)
-    plt.ylim(ax1)
+    if plot:
+        plt.imshow(I[::-1,:],aspect="auto",extent=[ax0[0],ax0[1],ax1[0],ax1[1]])
+        plt.xlabel(ax0label)
+        plt.ylabel(ax1label)    
+        plt.scatter([-1,-1],[-1,-1],c=[cax[0],cax[1]],cmap=cmap)
+        cb=plt.colorbar()
+        cb.set_label(cblabel)
+        plt.xlim(ax0)
+        plt.ylim(ax1)
+    return(I)
 
 if __name__ == "__main__":
 
