@@ -3,7 +3,7 @@
 Visualize 3D data cubes with 2D color images. The third dimension is visualized by mixing different colors together based on the intensity of the values within the third dimension.
 
 Example code in __main__ of:
-<code>
+```
 # create a 3d data cube of noise
 n.random.seed(42)
 I = n.random.randn(100*100*100)
@@ -18,7 +18,7 @@ I=n.abs(n.real(n.fft.ifftn(I2*(1e-2+n.sqrt(f1**2+f2**2+f3**2))**(-5/3.0))))
 # create color representation and show it
 rgb_image(I)
 plt.show()
-</code>
+```
 
 This should give you a visualization of a simulation of a turbulent scalar quantity:
 
