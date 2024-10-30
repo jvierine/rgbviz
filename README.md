@@ -1,14 +1,10 @@
 # RGBVIZ
 
-Visualize 3D data cubes with 2D color images. The third dimension is visualized by mixing different colors together based on the intensity of the values within the third dimension. The example pictures hopefully explain the concept. 
+Visualize 3D data cubes with 2D color images. The third dimension is visualized by mixing different colors together based on the intensity of the values within the third dimension.
 
+Example code in __main__ of:
 <code>
-import rgb_balance as rb
-import numpy as n
-I = n.random.randn(100*100*100,dtype=n.float32)
-I.shape = (100,100,100)
-Irgb=rb.rgb_image(I)
-plt.show()
+python3 rgb_balance.py
 </code>
 
 
