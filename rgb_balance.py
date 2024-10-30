@@ -25,7 +25,7 @@ def rgb_image(A3,
               cmap=matplotlib.colormaps["gist_rainbow"],
               gain=1.0,
               maxv=None,
-              autogain=True,
+              log=True,
               plot=True
             ):
     """
@@ -43,44 +43,48 @@ def rgb_image(A3,
 #    print(MFm.shape)
     import matplotlib.colors as mc
     I=n.zeros([A3.shape[0],A3.shape[1],3],dtype=n.float32)
+
+    # use this as the normalization constant for all histogram counts
     if maxv == None:
         maxv=n.max(A3)
 
     for i in range(A3.shape[0]):
         print("%d/%d"%(i,A3.shape[0]))
         for j in range(A3.shape[1]):
+            # extract distribution for pixel i,j of histogram
             dist=A3[i,j,:]
+            # linear values along third axis
             hv=n.arange(len(dist))/len(dist)
-  #          sv=n.repeat(1,len(dist))
+            # normalize histogram value 
             vv=dist/maxv
- #           B=n.array([hv,sv,vv])
+
+            # sort by value in decreasing order
             sort_idx=n.argsort(vv)[::-1]
+            # select peak_fraction of the largest histogram bins
+            # 1 = use everything 0 = use only peak bin
             i1=n.min([int(len(vv)*peak_fraction),len(vv)])
+            # we have to select at least one bin
             if i1==0:
                 i1=1
+            
+            # peak values
             sort_idx=sort_idx[0:i1]
-            #            B=B[:,sort_idx]
-
             vvv=vv[sort_idx]
-            #vvv[vvv>1]=1
 
-
+            # use a colormap to generate rgb color values for each histogram bin
+            # scale intensity by histogram of each bin
             B=cmap(hv[sort_idx])[:,0:3]*vvv[:,None]
-            # color
+
+            # sum rgb values together to get a pixel color
             I[i,j,:]=n.sum(B,axis=0)
 
+    # logarithmic or linear scaling
+    if log:
+        I=lognormalize(I)
+    else:
+        I=I/n.max(I)
 
-#    ho=h5py.File("rgb.h5","w")
- #   ho["I"]=I
-  #  ho.close()
-
-
-   # if autogain:
-    #    I=gain*I/n.max(I)
-#    else:
- #       I=gain*I
-   # I[I>1]=1
-    I=lognormalize(I)
+    # plot or no plot
     if plot:
         plt.imshow(I[::-1,:],aspect="auto",extent=[ax0[0],ax0[1],ax1[0],ax1[1]])
         plt.xlabel(ax0label)
