@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 def lognormalize(I):
-
-    v=(1/3)*(I[:,:,0]+I[:,:,1]+I[:,:,2])
     I2=n.log10(I)
-    idx=n.where(I>0)
+    idx=n.where(I!=0)
     idx0=n.where(I==0)
     low,high=n.percentile(I2[idx],[1,99])
+   
+    I2[I2<low]=low
+    I2[I2>high]=high
     I2[idx]=(I2[idx]-low)/(high-low)
     I2[idx0]=0
     return(I2)
@@ -81,6 +82,7 @@ def rgb_image(A3,
     # logarithmic or linear scaling
     if log:
         I=lognormalize(I)
+
     else:
         I=I/n.max(I)
 
@@ -98,14 +100,29 @@ def rgb_image(A3,
 
 if __name__ == "__main__":
 
-
-    h=h5py.File("data/rgb.h5","r")
-    I=h["I"][()]
-
-    I2=lognormalize(I)
-    plt.style.use('dark_background')
-
-
-    plt.imshow(I2[::-1,:],aspect="auto")
+    n.random.seed(42)
+    I = n.random.randn(100*100*100)
+    I.shape=(100,100,100)
+    I2 = n.fft.fftn(I)
+    freq=n.fft.fftfreq(100)
+    f1,f2,f3=n.meshgrid(freq,freq,freq)
+    # colored noise with k**(5/3)
+    I=n.abs(n.real(n.fft.ifftn(I2*(1e-2+n.sqrt(f1**2+f2**2+f3**2))**(-5/3.0))))
+#    print(n.min(I))
+ #   print(n.max(I))
+  #  exit(0)
+#    plt.imshow(I[:,:,0])
+ #   plt.show()
+#    exit(0)
+    rgb_image(I)
     plt.show()
+#    h=h5py.File("data/rgb.h5","r")
+ #   I=h["I"][()]
+
+  #  I2=lognormalize(I)
+   # plt.style.use('dark_background')
+
+
+    #plt.imshow(I2[::-1,:],aspect="auto")
+    #plt.show()
 
